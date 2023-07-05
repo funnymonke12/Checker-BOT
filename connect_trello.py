@@ -1,5 +1,5 @@
 from config import apiKey, apiToken
-def connect_trello():
+def create_card():
     import requests
     url = 'https://api.trello.com/1/cards/'
 
