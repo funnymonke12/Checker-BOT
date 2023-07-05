@@ -1,28 +1,15 @@
-import sqlite3
+import sqlite3 as sq
 
-username = 'funkymonjey'
-def insert_username(username):
-    try:
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute(f"INSERT INTO 'usernames' VALUES ('%s')" % username)
-        conn.commit()
-    except Exception as ex:
-        print(ex)
-    finally:
-        if conn:
-            conn.close()
+def sql_start():
+    global base, cur
+    base = sq.connect('users.db')
+    cur = base.cursor()
+    if base:
+        print('Data base connected OK!')
+    base.execute('CREATE TABLE IF NOT EXISTS usernames(nickname TEXT)')
+    base.commit()
 
-insert_username(username)
-def get_usernames():
-    try:
-        conn = sqlite3.connect('users.db')
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT nickname FROM usernames")
-        data = [row[0] for row in cursor.fetchall()]
-        return data
-    except Exception as ex:
-        print(ex)
-    finally:
-        if conn:
-            conn.close()
+async def sql_add_command(state):
+    async with state.proxy() as data:
+        cur.execute("INSERT INTO usernames VALUES (?)", tuple(data.values()))
+        base.commit()
