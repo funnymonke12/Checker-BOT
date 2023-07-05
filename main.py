@@ -4,7 +4,7 @@ from config import API_TOKEN
 from database import insert_username
 from connect_trello import create_card
 
-lst_tracked_users = ["funkymonjey"]
+
 
 
 # Configure logging
