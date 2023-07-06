@@ -13,3 +13,9 @@ async def sql_add_command(state):
     async with state.proxy() as data:
         cur.execute("INSERT INTO usernames VALUES (?)", tuple(data.values()))
         base.commit()
+
+def get_usernames():
+    cur.execute("SELECT nickname FROM usernames")
+    data = [row[0] for row in cur.fetchall()]
+    return data
+

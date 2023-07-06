@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from config import API_TOKEN
 import database as db
-from connect_trello import create_card
+from connect_trello import create_card, get_listID
 from keyboard import basic_kb, cancel_kb
 
 
@@ -47,14 +47,15 @@ async def process_name(message: types.Message, state: FSMContext):
     await db.sql_add_command(state)
     await state.finish()
 
+@dp.message_handler()
+async def echo(message: types.Message):
+    if message.from_user.username in db.get_usernames() and 'склад' in message.text.lower():
+        await message.answer('Создаю карточку в Trello')
+        # lstID = get_listID()
+        # create_card(lstID)
 
 
-# @dp.message_handler()
-# async def echo(message: types.Message):
-#     if message.from_user.username in db.get_usernames():
-#         await message.answer(f"Вы, пользователь {message.from_user.username} отслеживаетесь")
-#     await message.answer(' ', reply_markup=basic_kb)
-
+        print('yes')
 async def on_startup(_):
     print('Бот подключился')
     db.sql_start()
